@@ -15,25 +15,6 @@ namespace Flights.Server.Controllers
             _logger = logger;
         }
 
-        [HttpGet("{id:int}")]
-        public ActionResult<FlightRm> GetById(int id)
-        {
-            return new FlightRm
-            (
-                Guid.NewGuid(),
-                "American Airlines",
-                random.Next(90, 5000).ToString(),
-                new TimePlaceRm("Los Angeles", DateTime.Now.AddHours(random.Next(1, 3))),
-                new TimePlaceRm("Istambul", DateTime.Now.AddHours(random.Next(4, 10))),
-                random.Next(1, 853)
-            );
-        }
-
-
-        /// <summary>
-        /// Return list of flights
-        /// </summary>
-        /// <returns>Collection of flights</returns>
         [HttpGet]
         public IEnumerable<FlightRm> Search()
         {
