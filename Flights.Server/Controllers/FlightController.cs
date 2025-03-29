@@ -24,7 +24,7 @@ namespace Flights.Server.Controllers
                     "American Airlines",
                     random.Next(90, 5000).ToString(),
                     new TimePlaceRm("Los Angeles", DateTime.Now.AddHours(random.Next(1, 3))),
-                    new TimePlaceRm("Istambul", DateTime.Now.AddHours(random.Next(4, 10))),
+                    new TimePlaceRm("Istanbul", DateTime.Now.AddHours(random.Next(4, 10))),
                     random.Next(1, 853)),
                 new(Guid.NewGuid(),
                     "Deutsche BA",
