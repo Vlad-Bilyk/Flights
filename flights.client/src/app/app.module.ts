@@ -6,18 +6,20 @@ import { AppComponent } from './app.component';
 import { SearchFlightsComponent } from './search-flights/search-flights.component';
 import { BookFlightComponent } from './book-flight/book-flight.component';
 import { AppRoutingModule } from './app-routing.module';
+import { NavMenuComponent } from './nav-menu/nav-menu.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SearchFlightsComponent,
-    BookFlightComponent
+    BookFlightComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
-  ],
+    AppRoutingModule,
+    NavMenuComponent
+],
   providers: [provideHttpClient()],
-  bootstrap: [SearchFlightsComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
