@@ -11,18 +11,20 @@ import { FlightRm } from '../api/models';
 export class SearchFlightsComponent {
   searchResult: FlightRm[] = [];
 
-  constructor(private flightService: FlightService) {}
+  constructor(private readonly flightService: FlightService) {}
 
   search() {
     this.flightService
       .searchFlight({})
-      .subscribe(
-        (response) => (this.searchResult = response),
-        this.handleError
-      );
+      .subscribe({
+        next: (response) => (this.searchResult = response),
+        error: this.handleError
+      })
   }
 
   private handleError(err: any) {
-    console.log(err);
+    console.log("Response Error. Status: ", err.Status)
+    console.log("Response error. Status Text: ", err.statusText)
+    console.log(err)
   }
 }

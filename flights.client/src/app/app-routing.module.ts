@@ -6,7 +6,7 @@ import { SearchFlightsComponent } from './search-flights/search-flights.componen
 const routes: Routes = [
     { path: '', component: SearchFlightsComponent, pathMatch: 'full' },
     { path: 'search-flights', component: SearchFlightsComponent },
-    { path: 'book-flight', component: BookFlightComponent },
+    { path: 'book-flight/:flightId', component: BookFlightComponent },
 ];
 
 @NgModule({
