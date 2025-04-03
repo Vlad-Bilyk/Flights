@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FlightService } from './../api/services/flight.service';
-import { FlightRm } from '../api/models';
+import { BookDto, FlightRm } from '../api/models';
 import { AuthService } from '../auth/auth.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-book-flight',
@@ -11,11 +12,14 @@ import { AuthService } from '../auth/auth.service';
   styleUrl: './book-flight.component.css',
 })
 export class BookFlightComponent implements OnInit {
+  form!: FormGroup;
+
   constructor(
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    private readonly flightService: FlightService,
-    private readonly authService: AuthService
+    private route: ActivatedRoute,
+    private router: Router,
+    private flightService: FlightService,
+    private authService: AuthService,
+    private fb: FormBuilder
   ) {}
 
   flightId: string = 'not loaded';
@@ -26,6 +30,10 @@ export class BookFlightComponent implements OnInit {
       this.router.navigate(['/register-passenger']);
 
     this.route.paramMap.subscribe((p) => this.findFlight(p.get('flightId')));
+
+    this.form = this.fb.group({
+      number: [1],
+    });
   }
 
   private readonly findFlight = (flightId: string | null) => {
@@ -36,6 +44,25 @@ export class BookFlightComponent implements OnInit {
       error: this.handleError,
     });
   };
+
+  book() {
+    console.log(
+      `Booking ${this.form.get('number')?.value} passengers for the flight: ${
+        this.flight.id
+      }`
+    );
+
+    const booking: BookDto = {
+      flightId: this.flightId,
+      passengerEmail: this.authService.currentUser?.email,
+      numberOfSeats: this.form.get('number')?.value,
+    };
+
+    this.flightService.bookFlight({body: booking}).subscribe({
+      next: (_) => console.log('succeded'),
+      error: console.error,
+    });
+  }
 
   private readonly handleError = (err: any) => {
     if (err.status == 404) {

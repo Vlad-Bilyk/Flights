@@ -11,7 +11,7 @@ import { FlightRm } from '../api/models';
 export class SearchFlightsComponent {
   searchResult: FlightRm[] = [];
 
-  constructor(private readonly flightService: FlightService) {}
+  constructor(private flightService: FlightService) {}
 
   search() {
     this.flightService.searchFlight({}).subscribe({

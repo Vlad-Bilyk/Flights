@@ -1,3 +1,4 @@
+using Flights.Server.Dtos;
 using Flights.Server.ReadModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,6 @@ namespace Flights.Server.Controllers
     public class FlightController : ControllerBase
     {
         private static readonly Random random = new();
-        private readonly ILogger<FlightController> _logger;
         private static readonly FlightRm[] flights =
         [
             new(Guid.NewGuid(),
@@ -49,10 +49,11 @@ namespace Flights.Server.Controllers
                 random.Next(1, 853)),
 
         ];
+        private static IList<BookDto> Bookings = new List<BookDto>();
 
-        public FlightController(ILogger<FlightController> logger)
+        public FlightController()
         {
-            _logger = logger;
+
         }
 
         [HttpGet]
@@ -77,6 +78,13 @@ namespace Flights.Server.Controllers
             }
 
             return Ok(flight);
+        }
+
+        [HttpPost]
+        public void Book(BookDto dto)
+        {
+            System.Diagnostics.Debug.WriteLine($"Booking a new flight {dto.FlightId}");
+            Bookings.Add(dto);
         }
     }
 }
