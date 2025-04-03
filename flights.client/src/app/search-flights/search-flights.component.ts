@@ -14,17 +14,15 @@ export class SearchFlightsComponent {
   constructor(private readonly flightService: FlightService) {}
 
   search() {
-    this.flightService
-      .searchFlight({})
-      .subscribe({
-        next: (response) => (this.searchResult = response),
-        error: this.handleError
-      })
+    this.flightService.searchFlight({}).subscribe({
+      next: (response) => (this.searchResult = response),
+      error: this.handleError,
+    });
   }
 
   private handleError(err: any) {
-    console.log("Response Error. Status: ", err.Status)
-    console.log("Response error. Status Text: ", err.statusText)
-    console.log(err)
+    console.log('Response Error. Status: ', err.Status);
+    console.log('Response error. Status Text: ', err.statusText);
+    console.log(err);
   }
 }

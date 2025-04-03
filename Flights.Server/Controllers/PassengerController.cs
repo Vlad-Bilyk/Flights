@@ -11,14 +11,14 @@ namespace Flights.Server.Controllers
         private readonly static IList<NewPassengerDto> passengers = new List<NewPassengerDto>();
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(NewPassengerDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Register(NewPassengerDto dto)
         {
             passengers.Add(dto);
             System.Diagnostics.Debug.WriteLine(passengers.Count);
-            return CreatedAtAction(nameof(Find), new { email = dto.Email });
+            return CreatedAtAction(nameof(Find), new { email = dto.Email }, dto);
         }
 
         [HttpGet("{email}")]
