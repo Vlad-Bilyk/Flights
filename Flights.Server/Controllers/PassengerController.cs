@@ -1,4 +1,5 @@
-﻿using Flights.Server.Dtos;
+﻿using Flights.Server.Domain.Entities;
+using Flights.Server.Dtos;
 using Flights.Server.ReadModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,7 @@ namespace Flights.Server.Controllers
     [ApiController]
     public class PassengerController : ControllerBase
     {
-        private readonly static IList<NewPassengerDto> passengers = new List<NewPassengerDto>();
+        private readonly static IList<Passenger> passengers = new List<Passenger>();
 
         [HttpPost]
         [ProducesResponseType(typeof(NewPassengerDto), StatusCodes.Status201Created)]
@@ -16,7 +17,12 @@ namespace Flights.Server.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Register(NewPassengerDto dto)
         {
-            passengers.Add(dto);
+            passengers.Add(new Passenger(
+                dto.Email,
+                dto.FirstName,
+                dto.LastName,
+                dto.Gender));
+
             System.Diagnostics.Debug.WriteLine(passengers.Count);
             return CreatedAtAction(nameof(Find), new { email = dto.Email }, dto);
         }
