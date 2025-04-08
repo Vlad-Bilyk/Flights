@@ -3,7 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FlightService } from './../api/services/flight.service';
 import { BookDto, FlightRm } from '../api/models';
 import { AuthService } from '../auth/auth.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-book-flight',
@@ -32,7 +37,14 @@ export class BookFlightComponent implements OnInit {
     this.route.paramMap.subscribe((p) => this.findFlight(p.get('flightId')));
 
     this.form = this.fb.group({
-      number: [1],
+      number: [
+        1,
+        Validators.compose([
+          Validators.required,
+          Validators.min(1),
+          Validators.max(254),
+        ]),
+      ],
     });
   }
 
@@ -46,6 +58,10 @@ export class BookFlightComponent implements OnInit {
   };
 
   book() {
+    if (this.form.invalid) {
+      return;
+    }
+
     console.log(
       `Booking ${this.form.get('number')?.value} passengers for the flight: ${
         this.flight.id
@@ -74,4 +90,8 @@ export class BookFlightComponent implements OnInit {
     console.log('Response error. Status Text: ', err.statusText);
     console.log(err);
   };
+
+  get number() {
+    return this.form.get('number') as FormControl;
+  }
 }
