@@ -33,12 +33,12 @@
         <div
           class="invalid-feedback d-block"
           *ngIf="
-            form.controls['firstname'].invalid &&
-            (form.controls['firstname'].dirty ||
-              form.controls['firstname'].touched)
+            form.controls['firstName'].invalid &&
+            (form.controls['firstName'].dirty ||
+              form.controls['firstName'].touched)
           "
         >
-          <div *ngIf="form.controls['firstname'].errors">
+          <div *ngIf="form.controls['firstName'].errors">
             First name is invalid
           </div>
         </div>
@@ -57,12 +57,12 @@
         <div
           class="invalid-feedback d-block"
           *ngIf="
-            form.controls['lastname'].invalid &&
-            (form.controls['lastname'].dirty ||
-              form.controls['lastname'].touched)
+            form.controls['lastName'].invalid &&
+            (form.controls['lastName'].dirty ||
+              form.controls['lastName'].touched)
           "
         >
-          <div *ngIf="form.controls['lastname'].errors">
+          <div *ngIf="form.controls['lastName'].errors">
             Last name is invalid
           </div>
         </div>

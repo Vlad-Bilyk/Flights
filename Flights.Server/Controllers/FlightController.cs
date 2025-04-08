@@ -1,4 +1,5 @@
 using Flights.Server.Domain.Entities;
+using Flights.Server.Domain.Errors;
 using Flights.Server.Dtos;
 using Flights.Server.ReadModels;
 using Microsoft.AspNetCore.Mvc;
@@ -101,10 +102,11 @@ namespace Flights.Server.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public IActionResult Book(BookDto dto)
         {
             System.Diagnostics.Debug.WriteLine($"Booking a new flight {dto.FlightId}");
@@ -116,12 +118,12 @@ namespace Flights.Server.Controllers
                 return NotFound();
             }
 
-            flight.Bookings.Add(
-                new Booking(
-                    dto.FlightId,
-                    dto.PassengerEmail,
-                    dto.NumberOfSeats)
-                );
+            var error = flight.MakeBooking(dto.PassengerEmail, dto.NumberOfSeats);
+
+            if (error is OverbookError)
+            {
+                return Conflict(new { message = "The number of requested seats exceeds the number of remaining seats" });
+            }
 
             return CreatedAtAction(nameof(Find), new { id = dto.FlightId });
         }
