@@ -1,4 +1,5 @@
-﻿using Flights.Server.Domain.Entities;
+﻿using Flights.Server.Data;
+using Flights.Server.Domain.Entities;
 using Flights.Server.Dtos;
 using Flights.Server.ReadModels;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,12 @@ namespace Flights.Server.Controllers
     [ApiController]
     public class PassengerController : ControllerBase
     {
-        private readonly static IList<Passenger> passengers = new List<Passenger>();
+        private readonly Entities _entities;
+
+        public PassengerController(Entities entities)
+        {
+            _entities = entities;
+        }
 
         [HttpPost]
         [ProducesResponseType(typeof(NewPassengerDto), StatusCodes.Status201Created)]
@@ -17,13 +23,13 @@ namespace Flights.Server.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Register(NewPassengerDto dto)
         {
-            passengers.Add(new Passenger(
+            _entities.Passengers.Add(new Passenger(
                 dto.Email,
                 dto.FirstName,
                 dto.LastName,
                 dto.Gender));
 
-            System.Diagnostics.Debug.WriteLine(passengers.Count);
+            System.Diagnostics.Debug.WriteLine(_entities.Passengers.Count);
             return CreatedAtAction(nameof(Find), new { email = dto.Email }, dto);
         }
 
@@ -32,7 +38,7 @@ namespace Flights.Server.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<PassengerRm> Find(string email)
         {
-            var passenger = passengers.FirstOrDefault(p => p.Email == email);
+            var passenger = _entities.Passengers.FirstOrDefault(p => p.Email == email);
 
             if (passenger == null)
             {

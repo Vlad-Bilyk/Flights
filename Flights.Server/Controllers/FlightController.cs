@@ -1,4 +1,4 @@
-using Flights.Server.Domain.Entities;
+using Flights.Server.Data;
 using Flights.Server.Domain.Errors;
 using Flights.Server.Dtos;
 using Flights.Server.ReadModels;
@@ -10,51 +10,11 @@ namespace Flights.Server.Controllers
     [Route("[controller]")]
     public class FlightController : ControllerBase
     {
-        private static readonly Random random = new();
-        private static readonly Flight[] flights =
-        [
-            new(Guid.NewGuid(),
-                "American Airlines",
-                random.Next(90, 5000).ToString(),
-                new TimePlace("Los Angeles", DateTime.Now.AddHours(random.Next(1, 3))),
-                new TimePlace("Istanbul", DateTime.Now.AddHours(random.Next(4, 10))),
-                random.Next(1, 853)),
-            new(Guid.NewGuid(),
-                "Deutsche BA",
-                random.Next(90, 5000).ToString(),
-                new TimePlace("Munchen", DateTime.Now.AddHours(random.Next(1, 10))),
-                new TimePlace("Schiphol", DateTime.Now.AddHours(random.Next(4, 15))),
-                random.Next(1, 853)),
-            new(Guid.NewGuid(),
-                "British Airways",
-                random.Next(90, 5000).ToString(),
-                new TimePlace("London, England", DateTime.Now.AddHours(random.Next(1, 15))),
-                new TimePlace("Vizzola-Ticino", DateTime.Now.AddHours(random.Next(4, 18))),
-                random.Next(1, 853)),
-            new(Guid.NewGuid(),
-                "BB Heliag",
-                random.Next(90, 5000).ToString(),
-                new TimePlace("Zurich", DateTime.Now.AddHours(random.Next(1, 15))),
-                new TimePlace("Baku", DateTime.Now.AddHours(random.Next(4, 19))),
-                random.Next(1, 853)),
-            new(Guid.NewGuid(),
-                "Adria Airways",
-                random.Next(90, 5000).ToString(),
-                new TimePlace("Ljubljana", DateTime.Now.AddHours(random.Next(1, 15))),
-                new TimePlace("Warshaw", DateTime.Now.AddHours(random.Next(4, 19))),
-                random.Next(1, 853)),
-            new(Guid.NewGuid(),
-                "ABA Air",
-                random.Next(90, 5000).ToString(),
-                new TimePlace("Praha Ruzyne", DateTime.Now.AddHours(random.Next(1, 55))),
-                new TimePlace("Paris", DateTime.Now.AddHours(random.Next(4, 58))),
-                random.Next(1, 853)),
+        private readonly Entities _entities;
 
-        ];
-
-        public FlightController()
+        public FlightController(Entities entities)
         {
-
+            _entities = entities;
         }
 
         [HttpGet]
@@ -63,7 +23,7 @@ namespace Flights.Server.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IEnumerable<FlightRm> Search()
         {
-            var flightRmList = flights.Select(flight => new FlightRm(
+            var flightRmList = _entities.Flights.Select(flight => new FlightRm(
                 flight.Id,
                 flight.Airline,
                 flight.Price,
@@ -82,7 +42,7 @@ namespace Flights.Server.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<FlightRm> Find(Guid id)
         {
-            var flight = flights.SingleOrDefault(f => f.Id == id);
+            var flight = _entities.Flights.SingleOrDefault(f => f.Id == id);
 
             if (flight == null)
             {
@@ -111,7 +71,7 @@ namespace Flights.Server.Controllers
         {
             System.Diagnostics.Debug.WriteLine($"Booking a new flight {dto.FlightId}");
 
-            var flight = flights.SingleOrDefault(f => f.Id == dto.FlightId);
+            var flight = _entities.Flights.SingleOrDefault(f => f.Id == dto.FlightId);
 
             if (flight is null)
             {
